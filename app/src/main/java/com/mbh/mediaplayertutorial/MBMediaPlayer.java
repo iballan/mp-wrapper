@@ -40,6 +40,37 @@ public class MBMediaPlayer {
         mContext = context;
     }
 
+
+    public boolean isRepeatAll() {
+        return isRepeatAll;
+    }
+    public void repeatAll(boolean isRepeatAll) {
+        this.isRepeatAll = isRepeatAll;
+    }
+
+    public boolean isRepeatOne() {
+        return isRepeat;
+    }
+    public void repeatOne(boolean isRepeat) {
+        this.isRepeat = isRepeat;
+    }
+
+    public boolean isShuffleOn() {
+        return isShuffle;
+    }
+    public void shuffle(boolean isShuffle) {
+        this.isShuffle = isShuffle;
+    }
+
+    public void setPlayAll(boolean isPlayAll) {
+        this.isPlayAll = isPlayAll;
+    }
+
+    public void playAllNow() {
+        setPlayAll(true);
+        playSoundAt(0);
+    }
+
     public void setOnComplestionListener(OnCompletionListener onMyComplestionListener){
         this.onMyComplestionListener = onMyComplestionListener;
     }
@@ -78,6 +109,7 @@ public class MBMediaPlayer {
 
     public void playSoundAt(int soundIndex) {
 
+        logger.debug("Playing file at index = "+soundIndex);
         try {
             if(mp == null)
                 mp = new MediaPlayer();
@@ -109,11 +141,6 @@ public class MBMediaPlayer {
             mp.release();
             mp = null;
         }
-    }
-
-    public void playAll() {
-        isPlayAll = true;
-        playSoundAt(0);
     }
 
     public boolean isPlaying() {
@@ -191,24 +218,6 @@ public class MBMediaPlayer {
         }
     }
 
-    public void repeat() {
-        if (isRepeat) {
-            isRepeat = false;
-        } else {
-            isRepeat = true;
-            isShuffle = false;
-        }
-    }
-
-    public void shuffle() {
-        if (isShuffle) {
-            isShuffle = false;
-        } else {
-            isShuffle = true;
-            isRepeat = false;
-        }
-    }
-
     public void moveBackward() {
         if(mp == null) mp = new MediaPlayer();
         // get current song position
@@ -233,14 +242,16 @@ public class MBMediaPlayer {
         @Override
         public void onCompletion(MediaPlayer mp) {
             if (isRepeat) {
+                logger.debug("Repeating the same sound file = "+currentSoundIndex);
                 playSoundAt(currentSoundIndex);
             } else if (isShuffle) {
                 Random rand = new Random();
                 currentSoundIndex = rand.nextInt((soundsList.size() - 1) + 1);
+                logger.debug("Playing Random sound file = "+currentSoundIndex);
                 playSoundAt(currentSoundIndex);
             } else {
-                if (!isPlayAll){
-                    if(onMyComplestionListener != null){
+                if (!isPlayAll) {
+                    if (onMyComplestionListener != null) {
                         onMyComplestionListener.onCompletion();
                     }
                     return;
@@ -248,13 +259,16 @@ public class MBMediaPlayer {
                 if (currentSoundIndex < (soundsList.size() - 1)) {
                     playSoundAt(currentSoundIndex + 1);
                     currentSoundIndex = currentSoundIndex + 1;
+                    logger.debug("Playing next Sound file = "+currentSoundIndex);
                 } else {
                     if(isRepeatAll) {
-                        playSoundAt(0);
                         currentSoundIndex = 0;
+                        playSoundAt(0);
+                        logger.debug("Finished all and repeating all = "+currentSoundIndex);
                     }else {
                         if(onMyComplestionListener != null){
                             onMyComplestionListener.onCompletion();
+                            logger.debug("Finished all and no repeat = "+currentSoundIndex);
                         }
                     }
                 }

@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(!mediaPlayer.isPlaying()) {
                     if(mediaPlayer.isPaused())
                         mediaPlayer.playOrPause(false);
-                    else mediaPlayer.playAll();
+                    else mediaPlayer.playAllNow();
                     ib_play.setImageResource(R.drawable.ic_pause);
                 } else {
                     mediaPlayer.pause();
