@@ -6,29 +6,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton ib_play, ib_stop;
     Button btn_next;
+    TextView tv_title;
 
     MBMediaPlayer mediaPlayer;
 
     Context context;
+
+    MBLogger logger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
 
+        logger = new MBLogger.Builder().setTag(this).createLogger();
+
         initUI();
 
-
         mediaPlayer = new MBMediaPlayer(this);
-        mediaPlayer.addAssetFile("dua1.mp3"); // test for assets file
-        mediaPlayer.addRawFile(R.raw.dua2); // test for raw file
+        mediaPlayer.addAssetFile("dua1", "dua1.mp3"); // test for assets file
+        mediaPlayer.addRawFile("dua2", R.raw.dua2); // test for raw file
 
         mediaPlayer.setOnComplestionListener(onCompletionListener);
+        mediaPlayer.setOnStartPlayingListener(onStartPlayingListener);
     }
 
     private MBMediaPlayer.OnCompletionListener onCompletionListener = new MBMediaPlayer.OnCompletionListener() {
@@ -38,10 +44,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    private MBMediaPlayer.OnStartPlayingListener onStartPlayingListener = new MBMediaPlayer.OnStartPlayingListener() {
+        @Override
+        public void onStartPlaying(MBMediaPlayer.MediaFile currentMediaFile) {
+            // Here you do what you wanna do on changing the start playing any new sound file
+            logger.debug("" + currentMediaFile.toString());
+            tv_title.setText(currentMediaFile.getMediaTitle());
+        }
+    };
+
     private void initUI() {
         ib_play = (ImageButton) findViewById(R.id.btn_play);
         ib_stop = (ImageButton) findViewById(R.id.btn_stop);
         btn_next = (Button) findViewById(R.id.btn_next);
+        tv_title = (TextView) findViewById(R.id.tv_title);
 
         ib_play.setOnClickListener(this);
         ib_stop.setOnClickListener(this);
@@ -63,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(!mediaPlayer.isPlaying()) {
                     if(mediaPlayer.isPaused())
                         mediaPlayer.playOrPause(false);
-                    else mediaPlayer.playAllNow();
+                     else mediaPlayer.playAllNow();
                     ib_play.setImageResource(R.drawable.ic_pause);
                 } else {
                     mediaPlayer.pause();

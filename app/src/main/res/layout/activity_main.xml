@@ -10,40 +10,45 @@
     tools:context="com.mbh.mediaplayertutorial.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:gravity="center"
+        android:text="Title"
+        android:textSize="30sp" />
 
     <LinearLayout
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageButton
-            android:layout_margin="3dp"
-            android:id="@+id/btn_play"
-            android:src="@drawable/ic_play"
-            android:scaleType="centerInside"
-            android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
         <ImageButton
-            android:layout_margin="3dp"
-            android:id="@+id/btn_stop"
-            android:src="@drawable/ic_stop"
-            android:scaleType="centerInside"
-            android:background="@android:color/transparent"
+            android:id="@+id/btn_play"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/btn_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_stop" />
+
         <Button
             android:id="@+id/btn_next"
-            android:layout_margin="3dp"
-            android:layout_gravity="center_vertical"
-            android:text="Next"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="3dp"
+            android:text="Next" />
     </LinearLayout>
 
 

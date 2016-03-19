@@ -31,6 +31,7 @@ public class MBMediaPlayer {
     private Context mContext = null;
 
     private OnCompletionListener onMyComplestionListener = null;
+    private OnStartPlayingListener onStartPlayingListener = null;
 
     public MBMediaPlayer(Context context) {
         mp = new MediaPlayer();
@@ -75,6 +76,10 @@ public class MBMediaPlayer {
         this.onMyComplestionListener = onMyComplestionListener;
     }
 
+    public void setOnStartPlayingListener(OnStartPlayingListener onStartPlayingListener){
+        this.onStartPlayingListener = onStartPlayingListener;
+    }
+
     public void addRawFile(@RawRes int rawRes) {
         addRawFile("", rawRes);
     }
@@ -107,6 +112,19 @@ public class MBMediaPlayer {
         soundsList.add(mf);
     }
 
+
+    public MediaFile getCurrentFile(){
+        if(soundsList == null || soundsList.size() < 1) {
+            return null; // No file in the list yet
+        }
+
+        if(currentSoundIndex < (soundsList.size()-1)) {
+            return soundsList.get(currentSoundIndex);
+        }else {
+            return soundsList.get(0);
+        }
+    }
+
     public void playSoundAt(int soundIndex) {
 
         logger.debug("Playing file at index = "+soundIndex);
@@ -125,6 +143,10 @@ public class MBMediaPlayer {
             }else {
                 mp.setDataSource(soundsList.get(soundIndex).getMediaPath());
                 mp.prepare();
+            }
+
+            if(onStartPlayingListener != null){
+                onStartPlayingListener.onStartPlaying(mediaFile);
             }
 
             mp.start();
@@ -280,6 +302,10 @@ public class MBMediaPlayer {
         void onCompletion();
     }
 
+    interface OnStartPlayingListener {
+        void onStartPlaying(MediaFile currentMediaFile);
+    }
+
     public class MediaFile {
         private String mediaPath;
         private String mediaTitle;
@@ -323,7 +349,12 @@ public class MBMediaPlayer {
 
         @Override
         public String toString() {
-            return "MediaTitle=" + mediaTitle + ", MediaPath=" + mediaPath;
+            return "MediaFile{" +
+                    "mediaPath='" + mediaPath + '\'' +
+                    ", mediaTitle='" + mediaTitle + '\'' +
+                    ", rawId=" + rawId +
+                    ", assetFileName='" + assetFileName + '\'' +
+                    '}';
         }
 
         public String getMediaPath() {
